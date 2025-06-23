@@ -142,7 +142,7 @@ async function generateCodeWithClaude(prompt: string): Promise<void> {
     abortController: new AbortController(),
     options: {
       maxTurns: 5,
-      permissionMode: "bypassPermissions",
+      permissionMode: "acceptEdits",
       // Configure MCP server as an external process
       mcpServers,
     },
