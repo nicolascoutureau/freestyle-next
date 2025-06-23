@@ -6,7 +6,7 @@
     "my-cli": "./dist/index.mjs"
   },
   "scripts": {
-    "dev": "next dev --turbopack  2>&1 | tee next.log",
+    "dev": "next dev --turbopack 2> next.log &",
     "build": "next build",
     "build:cli": "tsc cli/index.ts --outDir dist --target es2020 --module es2020 --moduleResolution node --esModuleInterop --skipLibCheck && mv dist/index.js dist/index.mjs",
     "cli": "npm run build:cli && node dist/index.mjs",
