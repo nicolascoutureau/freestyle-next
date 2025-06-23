@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { Command } from "commander";
-import { query } from "@anthropic-ai/claude-code";
+import { McpServerConfig, query } from "@anthropic-ai/claude-code";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
@@ -111,13 +111,31 @@ async function startMcpServer(): Promise<void> {
 
 async function generateCodeWithClaude(prompt: string): Promise<void> {
   // Get the current file's directory to locate the MCP server
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
-  const mcpServerPath = path.resolve(__dirname, "../dist/index.mjs");
+
+  const mcpServers: Record<string, McpServerConfig> = {};
+
+  try {
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+    const mcpServerPath = path.resolve(__dirname, "../dist/index.mjs");
+    console.log("MCP Server path:", mcpServerPath);
+    mcpServers["demo-server"] = {
+      command: "node",
+      args: [mcpServerPath, "mcp-server"],
+      env: {},
+    };
+  } catch (error) {
+    console.error("Error getting the current file's directory:", error);
+  }
 
   // Clear the output file at the start
   const outputFile = path.resolve(process.cwd(), "output.txt");
-  fs.writeFileSync(outputFile, "");
+
+  try {
+    fs.writeFileSync(outputFile, "");
+  } catch (error) {
+    console.error("Error clearing the output file:", error);
+  }
 
   for await (const message of query({
     prompt: prompt,
@@ -126,18 +144,16 @@ async function generateCodeWithClaude(prompt: string): Promise<void> {
       maxTurns: 5,
       permissionMode: "bypassPermissions",
       // Configure MCP server as an external process
-      mcpServers: {
-        "demo-server": {
-          command: "node",
-          args: [mcpServerPath, "mcp-server"],
-          env: {},
-        },
-      },
+      mcpServers,
     },
   })) {
     // Write the message to a file
-    const messageContent = JSON.stringify(message, null, 2) + "\n";
-    fs.appendFileSync(outputFile, messageContent);
+    try {
+      const messageContent = JSON.stringify(message, null, 2) + "\n";
+      fs.appendFileSync(outputFile, messageContent);
+    } catch (error) {
+      console.error("Error writing to the output file:", error);
+    }
 
     // Stream just the text content for better UX
     // if (message.type === "assistant") {
