@@ -18,6 +18,7 @@
   "dependencies": {
     "@anthropic-ai/claude-code": "^1.0.31",
     "@hookform/resolvers": "^5.1.1",
+    "@modelcontextprotocol/sdk": "^1.13.0",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-alert-dialog": "^1.1.14",
     "@radix-ui/react-aspect-ratio": "^1.1.7",
