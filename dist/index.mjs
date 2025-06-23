@@ -34,7 +34,7 @@ async function generateCodeWithClaude(prompt) {
     })) {
         messages.push(message);
     }
-    console.log(messages);
+    console.log(JSON.stringify(messages, null, 3));
 }
 // Parse command line arguments
 program.parse();

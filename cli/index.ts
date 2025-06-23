@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 
 import { Command } from "commander";
-import * as fs from "fs";
-import * as path from "path";
 import { query, type SDKMessage } from "@anthropic-ai/claude-code";
 
 const program = new Command();
@@ -29,23 +27,20 @@ program
   });
 
 async function generateCodeWithClaude(prompt: string): Promise<void> {
-  console.log(`🤖 Asking Claude: "${prompt}"`);
-  console.log("⏳ Generating response...\n");
-
   const messages: SDKMessage[] = [];
 
   for await (const message of query({
     prompt: prompt,
     abortController: new AbortController(),
     options: {
-      maxTurns: 3,
+      maxTurns: 5,
       permissionMode: "acceptEdits",
     },
   })) {
     messages.push(message);
   }
 
-  console.log(messages);
+  console.log(JSON.stringify(messages, null, 4));
 }
 
 // Parse command line arguments
