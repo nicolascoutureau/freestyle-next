@@ -2,11 +2,18 @@
   "name": "my-app",
   "version": "0.1.0",
   "private": true,
+  "bin": {
+    "my-cli": "./dist/index.mjs"
+  },
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "npm run install_claude_global && next dev --turbopack",
     "build": "next build",
+    "build:cli": "tsc cli/index.ts --outDir dist --target es2020 --module es2020 --moduleResolution node --esModuleInterop --skipLibCheck && mv dist/index.js dist/index.mjs",
+    "cli": "npm run build:cli && node dist/index.mjs",
+    "cli-run": "npm run build:cli && node dist/index.mjs",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "install_claude_global": "npm install -g @anthropic-ai/claude-code"
   },
   "dependencies": {
     "@anthropic-ai/claude-code": "^1.0.31",
@@ -40,6 +47,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "commander": "^14.0.0",
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.6.0",
     "input-otp": "^1.4.2",
@@ -60,7 +68,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@types/node": "^20.19.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
