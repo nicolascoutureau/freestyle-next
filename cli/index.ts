@@ -14,6 +14,13 @@ program
   .version("1.0.0");
 
 program
+  .command("hello")
+  .description("Say hello")
+  .action(() => {
+    console.log("Hello, world!");
+  });
+
+program
   .command("claude")
   .description("Generate code with Claude")
   .argument("<prompt>", "The prompt to generate code with")
