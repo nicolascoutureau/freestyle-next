@@ -31,7 +31,7 @@ async function generateCodeWithClaude(prompt: string): Promise<void> {
     prompt: prompt,
     abortController: new AbortController(),
     options: {
-      maxTurns: 10,
+      maxTurns: 3,
       permissionMode: "acceptEdits",
     },
   })) {
