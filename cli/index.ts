@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { Command } from "commander";
-import { query, type SDKMessage } from "@anthropic-ai/claude-code";
+import { query, SDKAssistantMessage } from "@anthropic-ai/claude-code";
 
 const program = new Command();
 
@@ -27,8 +27,6 @@ program
   });
 
 async function generateCodeWithClaude(prompt: string): Promise<void> {
-  const messages: SDKMessage[] = [];
-
   for await (const message of query({
     prompt: prompt,
     abortController: new AbortController(),
@@ -37,10 +35,12 @@ async function generateCodeWithClaude(prompt: string): Promise<void> {
       permissionMode: "acceptEdits",
     },
   })) {
-    messages.push(message);
+    process.stdout.write(JSON.stringify(message, null, 4));
+    process.stdout.write("\n");
   }
 
-  console.log(JSON.stringify(messages, null, 4));
+  // Add a final newline
+  process.stdout.write("\n");
 }
 
 // Parse command line arguments

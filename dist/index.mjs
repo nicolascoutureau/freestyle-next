@@ -21,20 +21,19 @@ program
     await generateCodeWithClaude(prompt);
 });
 async function generateCodeWithClaude(prompt) {
-    console.log(`🤖 Asking Claude: "${prompt}"`);
-    console.log("⏳ Generating response...\n");
-    const messages = [];
     for await (const message of query({
         prompt: prompt,
         abortController: new AbortController(),
         options: {
-            maxTurns: 3,
+            maxTurns: 5,
             permissionMode: "acceptEdits",
         },
     })) {
-        messages.push(message);
+        process.stdout.write(JSON.stringify(message, null, 4));
+        process.stdout.write("\n");
     }
-    console.log(JSON.stringify(messages, null, 3));
+    // Add a final newline
+    process.stdout.write("\n");
 }
 // Parse command line arguments
 program.parse();
